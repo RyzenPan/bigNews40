@@ -225,8 +225,53 @@
         <p>CopyRight © 2019 深圳大事件信息技术股份有限公司 All Rights Reserved</p>
         <p>电话：0755-****888 粤ICP备*******8号</p>
     </div>
+
     <!-- 导包template -->
     <script src="./js/template-web.js"></script>
+    <!-- 新闻列表模板 -->
+    <script id="news" type="text/html">
+        {{ each data.data v }}
+        <div class="common_news_list">
+            <a href="#" class="list_pic"><img src="{{ v.cover }}" alt=""></a>
+            <h4><a href="./article.html?id={{ v.id }}">{{ v.title }}</a></h4>
+            <p>{{@ v.content }}</p>
+            <div class="new_info">
+                <span>标签：{{ v.category }}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( {{ v.read }}
+                    )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( {{ v.comments }} )</span>
+                <b>{{ v.date }}</b>
+            </div>
+        </div>
+        {{ /each }}
+    </script>
+
+    <script>
+        //入口函数
+        $(function () {
+            //搜索按钮点击事件
+            $('.search_btn').click(function () {
+                //获取搜索内容
+                var text = $('.search_txt').val();
+                //ajax请求
+                $.ajax({
+                    url: 'http://localhost:8080/api/v1/index/search',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        page: 1,
+                        perpage: 10,
+                        key: text
+                    },
+                    success: function (backData) {
+                        console.log(backData);
+                        $('.setfr').html(template('news', backData));
+                    }
+                });
+            });
+
+            //页面一加载：默认搜索全部
+            $('.search_btn').trigger('click');
+        });
+    </script>
 </body>
 
 </html>

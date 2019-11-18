@@ -227,6 +227,102 @@
     <script src="./js/template-web.js"></script>
     <!-- 引入jq文件 -->
     <script src="./js/jquery-1.12.4.min.js"></script>
+
+    <script type="text/html" id="hotList">
+        {{if data}}
+            <li><span class="first">1</span><a href="#">{{data[0].title}}</a></li>
+            <li><span class="second">2</span><a href="#">{{data[1].title}}</a></li>
+            <li><span class="third">3</span><a href="#">{{data[2].title}}</a></li>
+            <li><span>4</span><a href="#">{{data[3].title}}</a></li>
+            <li><span>5</span><a href="#">{{data[4].title}}</a></li>
+            <li><span>6</span><a href="#">{{data[5].title}}</a></li>
+            <li><span>7</span><a href="#">{{data[6].title}}</a></li>
+        {{/if}}
+        </script>
+
+    <script type="text/html" id="newList">
+            {{each data}}
+            <div class="common_news_list">
+                    <a href="#" class="list_pic"><img src="{{ $value.cover}}" alt=""></a>
+                    <h4><a href="#">{{ $value.title}} </a></h4>
+                    <p>
+                            {{ $value.intro }}
+                    </p>
+                    <div class="new_info">
+                        <span>标签：{{ $value.category }}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( {{ $value.read }}
+                            )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( {{ $value.comments }} )</span>
+                        <b>发布于 {{ $value.date }}</b>
+                    </div>
+                </div>
+            {{/each}}
+            </script>
+
+
+    <script type="text/html" id="commentList">
+        {{each data}}
+            <li>
+              <span>{{ $value.author.slice(0,1) }}</span>
+              <b><em>{{ $value.author }}</em> {{ $value.date }} 发表:</b>
+              <strong>{{ $value.intro }}</strong>
+            </li>
+        {{/each}}
+    </script>
+
+    <script type="text/html" id="attention">
+        {{each data}}
+            <li><a href="#">{{ $value.intro }}</a></li>
+        {{/each}}
+    </script>
+
+    <script>
+        // 文字热门排行模块
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/v1/index/rank',
+            success: function (res) {
+                // console.log(res);
+                const htmlStr = template('hotList', res)
+                // console.log(htmlStr);
+                $(".hotrank_list").html(htmlStr);
+            }
+        })
+
+        // 最新资讯
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/v1/index/latest',
+            success: function (res) {
+                // console.log(res);
+                const htmlStr = template('newList', res);
+                // console.log(htmlStr);
+                $(".common_news").html(htmlStr);
+            }
+        })
+        // 最新评论
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/v1/index/latest_comment',
+            success: function (res) {
+                // console.log(res);
+                const htmlStr = template('commentList', res);
+                // console.log(htmlStr);
+                $(".comment_list").html(htmlStr);
+            }
+        })
+
+        // 焦点关注 
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/v1/index/attention',
+            success: function (res) {
+                console.log(res);
+                const htmlStr = template('attention', res);
+                console.log(htmlStr);
+                $(".guanzhu_list").html(htmlStr);
+            }
+        })
+
+    </script>
 </body>
 
 </html>
