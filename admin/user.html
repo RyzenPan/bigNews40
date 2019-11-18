@@ -68,6 +68,60 @@
             </form>
         </div>
     </div>
+
+    <script src="./libs/html.js"></script>
+
+    <script>
+        // 获取个人详情页信息显示
+        $.ajax({
+            type: 'get',
+            url: window.BigNew.user_detail,
+            success: function (res) {
+                // console.log(res.data);
+                $('#inputEmail1').val(res.data.username);
+                $('#inputEmail2').val(res.data.nickname);
+                $('#inputEmail3').val(res.data.email);
+                $('.user_pic').attr('src', res.data.userPic)
+                $('#inputEmail4').val(res.data.password);
+            }
+        })
+
+        $('.btn').on('click', function (e) {
+            e.preventDefault();
+            // console.dir($('#exampleInputFile')[0]);
+            // 设置个人详情页信息保存
+            const data = new FormData();
+            // 创建一个FormData对象用来存储所有发送的数据
+            data.append('username', $('#inputEmail1').val());
+            data.append('nickname', $('#inputEmail2').val());
+            data.append('email', $('#inputEmail3').val());
+            data.append('userPic', $('#exampleInputFile')[0]);
+            data.append('password', $('#inputEmail4').val());
+            // console.log(data);
+            // 发送ajax请求，把要更改的信息上传到服务器
+            $.ajax({
+                type: 'post',
+                url: window.BigNew.user_edit,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    // console.log(res);
+                    // 如果上传成功，则提示用户成功并跳转到后台首页
+                    if (res.code == 200) {
+                        alert('更新成功');
+                        location.href = './index.html';
+                    } else {
+                        alert('上传失败，请重新上传'); // 失败提示
+                    }
+                }
+            })
+        })
+
+
+    </script>
+
+
 </body>
 
 </html>
