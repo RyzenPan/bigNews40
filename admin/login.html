@@ -84,15 +84,13 @@
           password: userPwd
         },
         success: function (res) {
+          $('#myModal').modal('show');
+          $('.modal-body').text(res.msg);
           if (res.code == 200) {
             // alert('登录成功');
-            $('#myModal').modal();
-            $('.modal-body').html('登录成功');
-            location.href = './index.html';
-          } else {
-            // alert('您输入的用户名和密码不对');
-            $('#myModal').modal();
-            $('.modal-body').html('您输入的用户名和密码不对');
+            $('#myModal').on('hidden.bs.modal', function (e) {
+              location.href = './index.html';
+            })
           }
         }
       })
