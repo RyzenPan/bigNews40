@@ -72,6 +72,36 @@
             </div>
         </div>
     </div>
+
+
+    <script src="./libs/html.js"></script>
+
+    <script type="text/html" id="list1">
+        {{each data}}
+            <option>{{$value.name}}</option>
+        {{/each}}
+    </script>
+
+    <script type="text/html" id="list2">
+        {{each data}}
+            <option>{{$value.slug}}</option>
+        {{/each}}
+    </script>
+
+    <script>
+        $(function () {
+            $.ajax({
+                type: 'get',
+                url: window.BigNew.category_list,
+                success: function (res) {
+                    console.log(res);
+                    const htmlStr1 = template('list1', res);
+                    $('#selCategory').html('<option value="">所有分类</option>' + htmlStr1);
+
+                }
+            })
+        })
+    </script>
 </body>
 
 </html>
