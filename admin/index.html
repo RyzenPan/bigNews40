@@ -55,21 +55,46 @@
         </div>
     </div>
 
+    <script src="./libs/html.js"></script>
     <script>
-        const xhr = new XMLHttpRequest();
+        $(function () {
+            $.ajax({
+                type: 'get',
+                url: window.BigNew.user_info,   // 地址用了全局的html.js去封装，在其他页面进行调用
+                success: function (res) {
+                    // 把返回回来的数据设置页面上的元素内容
+                    $('.user_info>img').attr('src', res.data.userPic);
+                    $('.user_info>span').html('欢迎&nbsp;&nbsp;' + res.data.nickname);
+                    $('.user_center_link>img').attr('src', res.data.userPic);
+                }
+            })
+            // 退出按钮
+            $('.logout').on('click', function () {
+                // 退出的时候删除session中的token
+                sessionStorage.removeItem('token');
+                // 跳转到登录页
+                location.href = './login.html';
+            })
+        })
 
-        xhr.open('get', 'http://localhost:8080/api/v1/admin/user/info');
 
-        xhr.setRequestHeader('Authorization', sessionStorage.getItem('token'));
 
-        xhr.send();
 
-        xhr.onreadystatechange = function () {
-            if (xhr.status == 200 && xhr.readyState == 4) {
-                const res = JSON.parse(xhr.responseText);
-                console.log(res);
-            }
-        }
+
+        // const xhr = new XMLHttpRequest();
+
+        // xhr.open('get', 'http://localhost:8080/api/v1/admin/user/info');
+
+        // xhr.setRequestHeader('Authorization', sessionStorage.getItem('token'));
+
+        // xhr.send();
+
+        // xhr.onreadystatechange = function () {
+        //     if (xhr.status == 200 && xhr.readyState == 4) {
+        //         const res = JSON.parse(xhr.responseText);
+        //         console.log(res);
+        //     }
+        // }
 
     </script>
 </body>
