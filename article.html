@@ -131,7 +131,7 @@
         <div class="right_con setfl">
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
-                <ul class="content_list">
+                <ul class="content_list hotrank_list">
                     <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
@@ -209,97 +209,50 @@
     <script src="./js/template-web.js"></script>
     <script src="./js/jquery-1.12.4.min.js"></script>
 
-    <!-- 1.文章详情 -->
-    <script id="author_list" type="text/html">
-        {{data.author}} 发布于 {{data.date}}&nbsp;&nbsp;&nbsp;分类: {{data.category}}&nbsp;&nbsp;&nbsp;阅读:
-                ({{data.read}})&nbsp;&nbsp;&nbsp;评论: ({{data.comments}})
-    </script>
+    <script type="text/html" id="hotList">
+        {{if data}}
+            <li><span class="first">1</span><a href="#">{{data[0].title}}</a></li>
+            <li><span class="second">2</span><a href="#">{{data[1].title}}</a></li>
+            <li><span class="third">3</span><a href="#">{{data[2].title}}</a></li>
+            <li><span>4</span><a href="#">{{data[3].title}}</a></li>
+            <li><span>5</span><a href="#">{{data[4].title}}</a></li>
+            <li><span>6</span><a href="#">{{data[5].title}}</a></li>
+            <li><span>7</span><a href="#">{{data[6].title}}</a></li>
+        {{/if}}
+        </script>
 
-    <!-- 2.评论列表 -->
-    <script id="comment" type="text/html">
-        {{ each data v }}
-        <div class="comment_detail_list">
-            <div class="person_pic fl">{{ v.author.substr(0,1) }}</div>
-            <div class="name_time fl"><b>{{ v.author }}</b><span>{{ v.date }}</span></div>
-            <div class="comment_text fl">
-                {{ v.content }}
-            </div>
-        </div>
-        {{ /each }}
-    </script>
+    <script type="text/html" id="commentList">
+            {{each data}}
+                <li>
+                  <span>{{ $value.author.slice(0,1) }}</span>
+                  <b><em>{{ $value.author }}</em> {{ $value.date }} 发表:</b>
+                  <strong>{{ $value.intro }}</strong>
+                </li>
+            {{/each}}
+        </script>
 
+    <script type="text/html" id="attention">
+            {{each data}}
+                <li><a href="#">{{ $value.intro }}</a></li>
+            {{/each}}
+        </script>
+
+    <!-- 引入公用热门评论焦点模块 -->
+    <script src="./js/public.js"></script>
     <script>
-        // 入口函数
-        $(function () {
-            //需求: 显示点击过来的文章详情.
-            //1.获取点击过来的文章id
-            var id = window.location.search.split("=")[1];
-            //2.根据id获取文章详情.
-            $.ajax({
-                type: 'get',
-                url: 'http://localhost:8080/api/v1/index/article',
-                data: {
-                    id: id
-                },
-                success: function (backData) {
-                    console.log(backData);
-                    if (backData.code == 200) {
-                        //3.把获取到的文章详情数据,填入到对应的标签中
-                        $('.article_title').text(backData.data.title);
-                        $('.article_con').html(backData.data.content);
-                        var resH = template('author_list', backData);
-                        $('.article_info').html(resH);
-                    }
-                }
-            });
-
-            //2.评论列表
-            $.ajax({
-                url: 'http://localhost:8080/api/v1/index/get_comment',
-                type: 'get',
-                dataType: 'json',
-                data: {
-                    articleId: id
-                },
-                success: function (backData) {
-                    console.log(backData);
-                    $('.comment_list_con').html(template('comment', backData));
-                    //根据数组长度显示评论条数
-                    $('.comment_count').text(backData.data.length + '条评论');
-                }
-            });
-
-            //3.发表评论按钮点击事件
-            //表单按钮：禁用默认事件
-            $('.comment_sub').click(function (e) {
-                //1.禁用默认行为
-                e.preventDefault();
-                //2.非空判断
-                if ($('.comment_name').val().trim().length == 0 || $('.comment_input').val().trim().length == 0) {
-                    alert('请输入用户名和评论内容');
-                    return;
-                };
-                //3.ajax请求
-                $.ajax({
-                    url: 'http://localhost:8080/api/v1/index/post_comment',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        author: $('.comment_name').val(),
-                        content: $('.comment_input').val(),
-                        articleId: id
-                    },
-                    success: function (backData) {
-                        console.log(backData);
-                        if (backData.code == 201) {
-                            alert('发表成功');
-                            window.location.reload();
-                        }
-                    }
-                });
-            });
-
-        });
+        // console.log(location.search.slice(4));
+        const id = location.search.slice(4);
+        console.log(id);
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/v1/index/artitle',
+            data: {
+                id: id
+            },
+            success: function (res) {
+                console.log(res);
+            }
+        })
     </script>
 </body>
 
