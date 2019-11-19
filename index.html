@@ -274,6 +274,30 @@
         {{/each}}
     </script>
 
+    <script type="text/html" id="hotpic">
+        {{if data}}
+        <li class="first">
+                <a href="#"><img src="{{data[0].cover}}" alt=""></a>
+                <p>{{data[0].title}}</p>
+            </li>
+            <li>
+                <a href="#"><img src="{{data[1].cover}}" alt=""></a>
+                <p>{{data[1].title}}</p>
+            </li>
+            <li>
+                <a href="#"><img src="{{data[2].cover}}" alt=""></a>
+                <p>{{data[2].title}}</p>
+            </li>
+            <li>
+                <a href="#"><img src="{{data[3].cover}}" alt=""></a>
+                <p>{{data[3].title}}</p>
+            </li>
+            <li>
+                <a href="#"><img src="{{data[4].cover}}" alt=""></a>
+                <p>{{data[4].title}}</p>
+            </li>
+        {{/if}}
+    </script>
     <script>
         // 文字热门排行模块
         $.ajax({
@@ -315,10 +339,22 @@
             type: 'get',
             url: 'http://localhost:8080/api/v1/index/attention',
             success: function (res) {
-                console.log(res);
+                // console.log(res);
                 const htmlStr = template('attention', res);
-                console.log(htmlStr);
+                // console.log(htmlStr);
                 $(".guanzhu_list").html(htmlStr);
+            }
+        })
+
+        // 焦点图片
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/v1/index/hotpic',
+            success: function (res) {
+                console.log(res);
+                const htmlStr = template('hotpic', res);
+                console.log(htmlStr);
+                $(".focus_list").html(htmlStr);
             }
         })
 
