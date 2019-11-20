@@ -88,8 +88,26 @@
         {{/each}}
     </script>
 
+    <script type="text/html" id="list3">
+        {{each data}}
+        <tr>
+           <td>{{$value.title}}</td>
+           <td>{{$value.author}}</td>
+           <td>奇趣事</td>
+           <td class="text-center">{{$value.date}}</td>
+           <td class="text-center">{{$value.state}}</td>
+           <td class="text-center">
+               <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+               <a href="javascript:void(0);" class="btn btn-danger btn-xs delete">删除</a>
+           </td>
+        </tr>
+        {{/each}}
+    </script>
+
+
     <script>
         $(function () {
+            // 加载分类筛选选项
             $.ajax({
                 type: 'get',
                 url: window.BigNew.category_list,
@@ -100,6 +118,29 @@
 
                 }
             })
+
+            // 渲染所有列表
+            let data = {
+                // key: '',
+                // type: '',
+                // state: '',
+                // page: 1,
+                // perage: 10
+            }
+            list(data);
+            function list(data) {
+                $.get({
+                    url: BigNew.article_query,
+                    data: data,
+                    success: function (res) {
+                        // console.log(res);
+                        const htmlStr = template('list3', res.data);
+                        // console.log(htmlStr);
+                        $('tbody').html(htmlStr);
+                    }
+                })
+            }
+
         })
     </script>
 </body>
