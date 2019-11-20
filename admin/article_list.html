@@ -98,7 +98,7 @@
            <td class="text-center">{{$value.state}}</td>
            <td class="text-center">
                <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
-               <a href="javascript:void(0);" class="btn btn-danger btn-xs delete">删除</a>
+               <a href="javascript:void(0);" class="btn btn-danger btn-xs delete" data-id="{{$value.id}}">删除</a>
            </td>
         </tr>
         {{/each}}
@@ -140,6 +140,34 @@
                     }
                 })
             }
+
+            // 删除功能
+            $('tbody').on('click', '.delete', function () {
+                // console.log($(this).attr('data-id'));
+                // 先从当前的按钮获得触发的id号
+                const delId = $(this).attr('data-id');
+                // 通过提示框询问用户是否删除
+                const flag = confirm('您确定要删除该文章类别吗？')
+                // 如果确认要删除，就开始执行删除请求
+                if (flag) {
+                    $.post({
+                        url: BigNew.article_delete,
+                        data: {
+                            id: delId
+                        },
+                        success: function (res) {
+                            // 提交完成之后重新渲染列表数据
+                            list(data);
+                        }
+                    })
+                }
+            })
+
+            // 筛选功能
+            $('#btnSearch').on('click', function () {
+                console.log($('.form-inline').serialize());
+                console.log($('.form-inline').serializeArray());
+            })
 
         })
     </script>
