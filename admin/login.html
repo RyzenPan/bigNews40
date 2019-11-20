@@ -90,7 +90,7 @@
           $('.modal-body').text(res.msg);
           if (res.code == 200) {
 
-            sessionStorage.setItem('token', res.token);
+            localStorage.setItem('token', res.token);
 
             // alert('登录成功');
             $('#myModal').on('hidden.bs.modal', function (e) {

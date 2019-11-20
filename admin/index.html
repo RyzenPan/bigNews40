@@ -75,7 +75,7 @@
             // 退出按钮
             $('.logout').on('click', function () {
                 // 退出的时候删除session中的token
-                sessionStorage.removeItem('token');
+                localStorage.removeItem('token');
                 // 跳转到登录页
                 location.href = './login.html';
             })

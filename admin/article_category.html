@@ -35,7 +35,7 @@
                         <td>奇趣事</td>
                         <td>funny</td>
                         <td class="text-center">
-                            <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
+                            <a href="javascript:void(0)" class=" btn btn-info btn-xs">编辑</a>
                             <a href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
                         </td>
                     </tr>
@@ -43,13 +43,137 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
-                                data-target="#myModal">新增分类</a>
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal"
+                                class="btn btn-success" id="xinzengfenlei">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">创建文章类别管理</h4>
+                </div>
+                <input type="hidden" name="" id="modalId">
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">名称:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Slug:</label>
+                            <input type="text" class="form-control" id="message-text">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary btn-confirm">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="./libs/html.js"></script>
+
+    <script type="text/html" id="list">
+    {{each data}}
+        <tr>
+            <td class="artName">{{$value.name}}</td>
+            <td class="artSlug">{{$value.slug}}</td>
+            <td class="text-center">
+                <a href="javascript:void(0)" data-id="{{$value.id}}"  data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs">编辑</a>
+                <a href="javascript:void(0)" data-id="{{$value.id}}" class="btn btn-danger btn-xs btn-delelt" >删除</a>
+        </td>
+    {{/each}}
+    </script>
+
+    <script>
+        // 入口函数
+        $(function () {
+            // 获取文章类别
+            function getList() {
+                $.get({
+                    url: BigNew.category_list,
+                    success: function (res) {
+                        // console.log(res);
+                        const htmlStr = template('list', res)
+                        $('tbody').html(htmlStr);
+                    }
+                })
+            }
+            getList();
+
+            $('#myModal').on('show.bs.modal', function (e) {
+                const el = e.relatedTarget;
+                // console.log(el);
+                if (el.id == 'xinzengfenlei') {
+                    $('.btn-confirm').text('创建').addClass('btn-success').removeClass('btn-primary');
+                    $('#exampleModalLabel').text('创建文章类别');
+                    $('.modal-body form')[0].reset();
+                } else {
+                    $('.btn-confirm').text('编辑').addClass('btn-primary').removeClass('btn-success');
+                    $('#exampleModalLabel').text('编辑文章类别');
+                    $('#modalId').val($(el).attr('data-id'));
+                    const artName = $(el).parent().siblings('.artName').text();
+                    const artSlug = $(el).parent().siblings('.artSlug').text();
+                    $('#recipient-name').val(artName);
+                    $('#message-text').val(artSlug);
+
+                }
+                $('.btn-confirm').on('click', function () {
+                    const name = $('#recipient-name').val();
+                    const slug = $('#message-text').val();
+                    if ($(this).hasClass('btn-success')) {
+                        $.post({
+                            url: BigNew.category_add,
+                            data: {
+                                name: name,
+                                slug: slug,
+                            },
+                            success: function () {
+                                $('#myModal').modal('hide')
+                                getList();
+                            }
+                        })
+                    } else {
+                        const id = $('#modalId').val();
+                        // console.log(id);
+                        $.post({
+                            url: BigNew.category_edit,
+                            data: {
+                                name: name,
+                                slug: slug,
+                                id: id
+                            },
+                            success: function (res) {
+                                $('#myModal').modal('hide')
+                                getList();
+                            }
+                        })
+                    }
+                })
+            })
+
+            $('tbody').on('click', '.btn-delelt', function () {
+                // console.log($(this).attr('data-id'));
+                const delId = $(this).attr('data-id');
+
+            })
+
+        })
+
+
+    </script>
 
 </html>

@@ -94,7 +94,7 @@
                 type: 'get',
                 url: window.BigNew.category_list,
                 success: function (res) {
-                    console.log(res);
+                    // console.log(res);
                     const htmlStr1 = template('list1', res);
                     $('#selCategory').html('<option value="">所有分类</option>' + htmlStr1);
 
