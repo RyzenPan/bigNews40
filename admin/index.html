@@ -27,7 +27,7 @@
         <div class="menu">
             <div class="level01 active"><a href="./main_count.html" target="main_frame"><i
                         class="iconfont icon-yidiandiantubiao04"></i><span>首页</span></a></div>
-            <div class="level01"><a href=""><i class="iconfont icon-icon-article"></i><span>文章管理</span><b
+            <div class="level01"><a href="#"><i class="iconfont icon-icon-article"></i><span>文章管理</span><b
                         class="iconfont icon-arrowdownl"></b></a></div>
             <ul class="level02">
                 <li><a href="./article_list.html" target="main_frame"><i
@@ -79,7 +79,24 @@
                 // 跳转到登录页
                 location.href = './login.html';
             })
+
+            $('div.level01').on('click', function () {
+                $(this).addClass('active').siblings('div').removeClass('active');
+                if ($(this).index() == 1) {
+                    $('ul.level02').toggle();
+                    $('ul.level02 a').eq(0)[0].click();
+                    $(this).find('b').toggleClass('rotate0');
+                }
+            })
+
+            $('ul.level02 li').on('click', function () {
+                $(this).addClass('active').siblings('li').removeClass('active');
+            })
+
+
         })
+
+
 
 
 
