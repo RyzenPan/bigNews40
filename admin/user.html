@@ -86,9 +86,12 @@
                     $('#inputEmail4').val(res.data.password);
                 }
             })
-
+            // 把图片变量定义在外面，以便ajax请求修改时把文件传上去
+            let imgData;
             $('#exampleInputFile').on('change', function () {
-                const imgData = this.files[0];
+                // 获取上传按钮时候的图片文件，并存到imgData中
+                imgData = this.files[0];
+                // 通过URL方法把图片生成url路径，把图片预览到页面上
                 const url = URL.createObjectURL(imgData);
                 // console.log(url);
                 $('.user_pic').attr('src', url);
@@ -97,14 +100,14 @@
 
             $('.btn').on('click', function (e) {
                 e.preventDefault();
-                // console.dir($('#exampleInputFile')[0]);
+                // console.dir($();
                 // 设置个人详情页信息保存
                 const data = new FormData();
                 // 创建一个FormData对象用来存储所有发送的数据
                 data.append('username', $('#inputEmail1').val());
                 data.append('nickname', $('#inputEmail2').val());
                 data.append('email', $('#inputEmail3').val());
-                data.append('userPic', $('#exampleInputFile')[0]);
+                data.append('userPic', imgData);
                 data.append('password', $('#inputEmail4').val());
                 // console.log(data);
                 // 发送ajax请求，把要更改的信息上传到服务器
