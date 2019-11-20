@@ -91,8 +91,12 @@
             $('#exampleInputFile').on('change', function () {
                 // 获取上传按钮时候的图片文件，并存到imgData中
                 imgData = this.files[0];
+                let url;
                 // 通过URL方法把图片生成url路径，把图片预览到页面上
-                const url = URL.createObjectURL(imgData);
+                if (imgData != null) {
+                    url = URL.createObjectURL(imgData);
+                }
+
                 // console.log(url);
                 $('.user_pic').attr('src', url);
             })
