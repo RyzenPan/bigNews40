@@ -51,6 +51,7 @@ $(function () {
                 list(paging, myPage);
             }
         });
+        console.log(res.data.totalPage);
 
     }
 

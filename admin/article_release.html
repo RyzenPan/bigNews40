@@ -18,6 +18,7 @@
     <link type="text/css" rel="stylesheet" href="./libs/jedate2/test/jeDate-test.css">
     <link type="text/css" rel="stylesheet" href="./libs/jedate2/skin/jedate.css">
     <script type="text/javascript" src="./libs/jedate2/src/jedate.js"></script>
+    <!-- <script src="./js/config.js"></script> -->
 </head>
 
 <body>
@@ -58,9 +59,9 @@
                         <!-- jedate日期插件 -->
                         <div class="jeitem">
                             <div class="jeinpbox">
-                                <input type="text" class="jeinput" id="testico" placeholder="点击选择发布时间">
+                                <input type="text" class="jeinput" name="date" id="testico" placeholder="点击选择发布时间">
                                 <div class="icons jebtns"
-                                    onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD'})">
+                                    onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',theme: { bgcolor: '#00A680', pnColor: '#00DDAA' }})">
                                 </div>
                             </div>
                         </div>
@@ -111,23 +112,25 @@
         //发布文章
         $('.btn-release').on('click', function (e) {
             e.preventDefault();
-            // const form = document.querySelector('#form');
-            // const data = new FormData(form);
-            const data = new FormData();
+            var form = document.querySelector('#form');
+            var myData = new FormData(form);
+            // console.log(data);
+            // const data = new FormData();
 
             // data.append('title', $('#inputTitle').val());
             // data.append('cover', $('#inputTitle').val());
-            // data.append('categoryId', $('#inputTitle').val());
-            // data.append('date', $('#inputTitle').val());
-            // data.append('content', $('#inputTitle').val());
+            // myData.append('categoryId', '2');
+            // myData.append('date', '2019-11-20');
+            myData.append('content', '这是一个测试');
             // data.append('tistatetle', $('#inputTitle').val());
 
 
             $.post({
                 url: BigNew.article_publish,
-                data: data,
+                data: myData,
                 processData: false,
                 contentType: false,
+                // dataType: 'json',
                 success: function (res) {
                     console.log(res);
                 }
