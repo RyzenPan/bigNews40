@@ -19,6 +19,7 @@
     <link type="text/css" rel="stylesheet" href="./libs/jedate2/skin/jedate.css">
     <script type="text/javascript" src="./libs/jedate2/src/jedate.js"></script>
     <!-- <script src="./js/config.js"></script> -->
+    <script type="text/javascript" src="./libs/wangEditor-3.1.1/release/wangEditor.min.js"></script>
 </head>
 
 <body>
@@ -111,6 +112,8 @@
 
         //发布文章
         $('.btn-release').on('click', function (e) {
+            console.log(editor.txt.text());
+
             e.preventDefault();
             var form = document.querySelector('#form');
             var myData = new FormData(form);
@@ -121,7 +124,7 @@
             // data.append('cover', $('#inputTitle').val());
             // myData.append('categoryId', '2');
             // myData.append('date', '2019-11-20');
-            myData.append('content', '这是一个测试');
+            myData.append('content', editor.txt.text());
             // data.append('tistatetle', $('#inputTitle').val());
 
 
@@ -136,17 +139,25 @@
                 }
             })
         })
-    </script>
 
-
-    <!-- wang编辑器js部分 -->
-    <script type="text/javascript" src="./libs/wangEditor-3.1.1/release/wangEditor.min.js"></script>
-    <script type="text/javascript">
+        // wang编辑器js部分
         var E = window.wangEditor
         var editor = new E('#editor')
         // var editor = new E(document.getElementById('editor'))
         editor.create()
+
+        // editor.customConfig.onchange = function (html) {
+        //     // html 即变化之后的内容
+        //     console.log(html)
+        // }
+
+        document.querySelector('.btn-release').addEventListener('click', function () {
+            // 读取 text
+
+        }, false)
+
     </script>
+
 </body>
 
 </html>
