@@ -96,66 +96,68 @@
     </script>
 
     <script>
-        // 清空标题
-        $('#inputTitle').val('');
-        // 文章类别
-        $.get({
-            url: BigNew.category_list,
-            success: function (res) {
-                // console.log(res);
-                const htmlStr = template('option', res)
-                $('.category').html(htmlStr);
-            }
-        })
-
-
-
-        //发布文章
-        $('.btn-release').on('click', function (e) {
-            console.log(editor.txt.text());
-
-            e.preventDefault();
-            var form = document.querySelector('#form');
-            var myData = new FormData(form);
-            // console.log(data);
-            // const data = new FormData();
-
-            // data.append('title', $('#inputTitle').val());
-            // data.append('cover', $('#inputTitle').val());
-            // myData.append('categoryId', '2');
-            // myData.append('date', '2019-11-20');
-            myData.append('content', editor.txt.text());
-            // data.append('tistatetle', $('#inputTitle').val());
-
-
-            $.post({
-                url: BigNew.article_publish,
-                data: myData,
-                processData: false,
-                contentType: false,
-                // dataType: 'json',
+        $(function () {
+            // 清空标题
+            $('#inputTitle').val('');
+            // 文章类别加载
+            $.get({
+                url: BigNew.category_list,
                 success: function (res) {
-                    console.log(res);
+                    // console.log(res);
+                    // 写入到页面中
+                    const htmlStr = template('option', res);
+                    $('.category').html(htmlStr);
                 }
             })
+
+            // 上传图片时预览图片
+            $('#inputCover').on('change', function () {
+                // 通过URL的方法把上传的图片转换成url路径
+                let url = URL.createObjectURL(this.files[0]);
+                // console.log(url);
+                // 应用到页面上进行预览
+                $('.article_cover').attr('src', url)
+            })
+
+
+            //发布文章
+            $('.btn-release').on('click', function (e) {
+                // console.log(editor.txt.text());
+                e.preventDefault();     // 阻止链接跳转事件
+                // 通过FromData获取整个表单的数据
+                var form = document.querySelector('#form');
+                var myData = new FormData(form);
+                // 富文本框单独获取并增加到myData中
+                myData.append('content', editor.txt.text());
+                // 发起修改请求
+                $.post({
+                    url: BigNew.article_publish,
+                    data: myData,
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                        if (res.msg == '发布成功') {
+                            // 修改完成后返回列表页
+                            alert('修改成功，即将返回到文章列表');
+                            location.href = './article_list.html';
+                        } else {
+                            alert('您输入的信息不对，全部选项必须填写');
+                        }
+                    },
+                    error: function () {
+                        alert('您输入的信息不对，全部选项必须填写');
+                    }
+                })
+            })
+
+            // wang编辑器js部分
+            var E = window.wangEditor
+            var editor = new E('#editor')
+            // var editor = new E(document.getElementById('editor'))
+            editor.create()
+
+
         })
-
-        // wang编辑器js部分
-        var E = window.wangEditor
-        var editor = new E('#editor')
-        // var editor = new E(document.getElementById('editor'))
-        editor.create()
-
-        // editor.customConfig.onchange = function (html) {
-        //     // html 即变化之后的内容
-        //     console.log(html)
-        // }
-
-        document.querySelector('.btn-release').addEventListener('click', function () {
-            // 读取 text
-
-        }, false)
-
     </script>
 
 </body>
