@@ -90,6 +90,7 @@ $(function () {
                 perpage: 10
             },
             success: function (res) {
+                $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
                 const htmlStr = template('list3', res.data);
                 $('tbody').html(htmlStr);
             }
