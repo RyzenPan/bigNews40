@@ -89,14 +89,22 @@ $(function () {
     $('#btnSearch').on('click', function (e) {
         // 阻止a标签跳转默认行为
         e.preventDefault();
-        // 点击筛选按键时，获取两个select按键的val值，发送ajax请求，返回到数据重新渲染到页面上
         const flter = function (res) {
-            // if (res.code !== 200 && )
-            $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
-            const htmlStr = template('list3', res.data);
-            $('tbody').html(htmlStr);
+            // 判断分类是否为空，空的话就隐藏页码导航，并切覆盖tbody的内容给用户提示没有数据
+            if (res.code !== 200 || res.data.data.length == 0) {
+                $('#pagination-demo').hide();
+                $('tbody').html('<tr><td colspan="6" style="color=#999;font-size=20px;text-align: center;">没有数据</td></tr>');
+            } else {
+                $('#pagination-demo').show();
+                $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
+                const htmlStr = template('list3', res.data);
+                $('tbody').html(htmlStr);
+            }
         }
         list(flter);
+
+        // 点击筛选按键时，获取两个select按键的val值，发送ajax请求，返回到数据重新渲染到页面上
+
     })
 
 })
