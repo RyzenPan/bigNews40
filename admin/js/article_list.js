@@ -8,29 +8,50 @@ $(function () {
             // console.log(res);
             const htmlStr1 = template('list1', res);
             $('#selCategory').html(htmlStr1);
-
         }
     })
 
     // 渲染所有列表
-    let data = {
-        // key: '',
-        // type: '',
-        // state: '',
-        page: 1,
-        perpage: 10
-    }
-    // 传入空对象直接返回所有文章列表
-    list(data);
+    list();
     function list(data) {
         $.get({
             url: BigNew.article_query,
-            data: data,
+            data: {
+                type: $('#selCategory').val(),
+                state: $('#selStatus').val(),
+                page: 1,
+                perpage: 10
+            },
             success: function (res) {
                 // console.log(res);
                 const htmlStr = template('list3', res.data);
                 // console.log(htmlStr);
                 $('tbody').html(htmlStr);
+                // 引入分页导航栏
+                $('#pagination-demo').twbsPagination({
+                    totalPages: res.data.totalPage,
+                    visiblePages: 7,
+                    first: '首页',
+                    prev: '上一页',
+                    next: '下一页',
+                    last: '尾页',
+                    onPageClick: function (event, page) {
+                        $.get({
+                            url: BigNew.article_query,
+                            data: {
+                                type: $('#selCategory').val(),
+                                state: $('#selStatus').val(),
+                                page: page,
+                                perpage: 10
+                            },
+                            success: function (res) {
+                                const htmlStr = template('list3', res.data);
+                                $('tbody').html(htmlStr);
+                            }
+                        })
+                    }
+                });
+
             }
         })
     }
