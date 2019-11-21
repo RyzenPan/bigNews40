@@ -78,16 +78,17 @@
     <script src="./libs/html.js"></script>
 
     <script type="text/html" id="list1">
+        <option value="">所有分类</option>
         {{each data}}
             <option>{{$value.name}}</option>
         {{/each}}
     </script>
-
+    <!-- 
     <script type="text/html" id="list2">
         {{each data}}
             <option>{{$value.slug}}</option>
         {{/each}}
-    </script>
+    </script> -->
 
     <script type="text/html" id="list3">
         {{each data}}

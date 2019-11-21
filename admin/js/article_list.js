@@ -7,7 +7,7 @@ $(function () {
         success: function (res) {
             // console.log(res);
             const htmlStr1 = template('list1', res);
-            $('#selCategory').html('<option value="">所有分类</option>' + htmlStr1);
+            $('#selCategory').html(htmlStr1);
 
         }
     })
