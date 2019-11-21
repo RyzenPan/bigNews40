@@ -69,6 +69,7 @@
                 </tbody>
             </table>
             <div class="row text-center">
+                <ul id="pagination" class="pagination-sm"></ul>
             </div>
         </div>
     </div>
@@ -97,80 +98,17 @@
            <td class="text-center">{{$value.date}}</td>
            <td class="text-center">{{$value.state}}</td>
            <td class="text-center">
-               <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+               <a href="article_edit.html?id={{$value.id}}" class="btn btn-default btn-xs">编辑</a>
                <a href="javascript:void(0);" class="btn btn-danger btn-xs delete" data-id="{{$value.id}}">删除</a>
            </td>
         </tr>
         {{/each}}
     </script>
 
+    <script src="./js/article_list.js"></script>
 
-    <script>
-        $(function () {
-            // 加载分类筛选选项
-            $.ajax({
-                type: 'get',
-                url: window.BigNew.category_list,
-                success: function (res) {
-                    // console.log(res);
-                    const htmlStr1 = template('list1', res);
-                    $('#selCategory').html('<option value="">所有分类</option>' + htmlStr1);
 
-                }
-            })
 
-            // 渲染所有列表
-            let data = {
-                // key: '',
-                // type: '',
-                // state: '',
-                // page: 1,
-                // perage: 10
-            }
-            list(data);
-            function list(data) {
-                $.get({
-                    url: BigNew.article_query,
-                    data: data,
-                    success: function (res) {
-                        // console.log(res);
-                        const htmlStr = template('list3', res.data);
-                        // console.log(htmlStr);
-                        $('tbody').html(htmlStr);
-                    }
-                })
-            }
-
-            // 删除功能
-            $('tbody').on('click', '.delete', function () {
-                // console.log($(this).attr('data-id'));
-                // 先从当前的按钮获得触发的id号
-                const delId = $(this).attr('data-id');
-                // 通过提示框询问用户是否删除
-                const flag = confirm('您确定要删除该文章类别吗？')
-                // 如果确认要删除，就开始执行删除请求
-                if (flag) {
-                    $.post({
-                        url: BigNew.article_delete,
-                        data: {
-                            id: delId
-                        },
-                        success: function (res) {
-                            // 提交完成之后重新渲染列表数据
-                            list(data);
-                        }
-                    })
-                }
-            })
-
-            // 筛选功能
-            $('#btnSearch').on('click', function () {
-                console.log($('.form-inline').serialize());
-                console.log($('.form-inline').serializeArray());
-            })
-
-        })
-    </script>
 </body>
 
 </html>

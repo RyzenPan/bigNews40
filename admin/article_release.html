@@ -67,6 +67,21 @@
             </form>
         </div>
     </div>
+
+
+    <script src="./libs/html.js"></script>
+
+    <script>
+        const articleId = location.search;
+        console.log(articleId);
+        $.post({
+            url: BigNew.article_edit,
+            data: {
+                id: articleId
+            },
+
+        })
+    </script>
 </body>
 
 </html>
