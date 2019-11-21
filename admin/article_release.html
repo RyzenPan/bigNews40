@@ -19,7 +19,7 @@
 <body>
     <div class="container-fluid">
         <div class="common_title">
-            文章编辑
+            文章发布
         </div>
         <div class="container-fluid common_con">
             <form class="form-horizontal article_form" id="form">
@@ -32,7 +32,7 @@
                 <div class="form-group">
                     <label for="inputCover" class="col-sm-2 control-label">文章封面：</label>
                     <div class="col-sm-10">
-                        <img src="images/pic06.jpg" class="article_cover">
+                        <img src="./images/uploads_icon2.png" class="article_cover">
                         <input name="cover" type="file" id="inputCover">
                     </div>
                 </div>
@@ -70,16 +70,51 @@
 
 
     <script src="./libs/html.js"></script>
+    <script type="text/html" id="option">
+    {{each data}}
+        <option value="{{$value.id}}">{{$value.name}}</option>
+    {{/each}}
+    </script>
 
     <script>
-        const articleId = location.search;
-        console.log(articleId);
-        $.post({
-            url: BigNew.article_edit,
-            data: {
-                id: articleId
-            },
+        // 清空标题
+        $('#inputTitle').val('');
+        // 文章类别
+        $.get({
+            url: BigNew.category_list,
+            success: function (res) {
+                // console.log(res);
+                const htmlStr = template('option', res)
+                $('.category').html(htmlStr);
+            }
+        })
 
+
+
+        //发布文章
+        $('.btn-release').on('click', function (e) {
+            e.preventDefault();
+            // const form = document.querySelector('#form');
+            // const data = new FormData(form);
+            const data = new FormData();
+
+            // data.append('title', $('#inputTitle').val());
+            // data.append('cover', $('#inputTitle').val());
+            // data.append('categoryId', $('#inputTitle').val());
+            // data.append('date', $('#inputTitle').val());
+            // data.append('content', $('#inputTitle').val());
+            // data.append('tistatetle', $('#inputTitle').val());
+
+
+            $.post({
+                url: BigNew.article_publish,
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    console.log(res);
+                }
+            })
         })
     </script>
 </body>

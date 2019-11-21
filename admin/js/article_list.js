@@ -12,20 +12,20 @@ $(function () {
     })
 
 
+    var myPage = 1;
     // 封装好一个ajax请求，通过传入page和success函数即可调用
-    function list(callback, page = 1) {
+    function list(callback, myPage = 1) {
         $.get({
             url: BigNew.article_query,
             data: {
                 type: $('#selCategory').val(),
                 state: $('#selStatus').val(),
-                page: page,
+                page: myPage,
                 perpage: 10
             },
             success: callback
         })
     }
-
 
 
     // 请求所有数据并显示第一页，并且加入分页导航栏
@@ -47,7 +47,8 @@ $(function () {
                     $('tbody').html(htmlStr);
                 }
                 // 当用户点击页码的时候重新请求数据并渲染到页面上
-                list(paging, page);
+                myPage = page;
+                list(paging, myPage);
             }
         });
 
@@ -71,8 +72,13 @@ $(function () {
                     id: delId
                 },
                 success: function (res) {
+                    const delList = function (res) {
+                        const htmlStr = template('list3', res.data);
+                        $('tbody').html(htmlStr);
+                        $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1);
+                    }
                     // 提交完成之后重新渲染列表数据
-                    list(data);
+                    list(delList);
                 }
             })
         }
@@ -84,6 +90,7 @@ $(function () {
         e.preventDefault();
         // 点击筛选按键时，获取两个select按键的val值，发送ajax请求，返回到数据重新渲染到页面上
         const flter = function (res) {
+            // if (res.code !== 200 && )
             $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
             const htmlStr = template('list3', res.data);
             $('tbody').html(htmlStr);
