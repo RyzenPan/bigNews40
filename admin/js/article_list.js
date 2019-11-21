@@ -11,50 +11,53 @@ $(function () {
         }
     })
 
+
+
+
+
     // 渲染所有列表
-    list();
-    function list(data) {
+    function list(callback, page = 1) {
         $.get({
             url: BigNew.article_query,
             data: {
                 type: $('#selCategory').val(),
                 state: $('#selStatus').val(),
-                page: 1,
+                page: page,
                 perpage: 10
             },
-            success: function (res) {
-                console.log(res);
-                const htmlStr = template('list3', res.data);
-                // console.log(htmlStr);
-                $('tbody').html(htmlStr);
-                // 引入分页导航栏
-                $('#pagination-demo').twbsPagination({
-                    totalPages: res.data.totalPage,
-                    visiblePages: 7,
-                    first: '首页',
-                    prev: '上一页',
-                    next: '下一页',
-                    last: '尾页',
-                    onPageClick: function (event, page) {
-                        $.get({
-                            url: BigNew.article_query,
-                            data: {
-                                type: $('#selCategory').val(),
-                                state: $('#selStatus').val(),
-                                page: page,
-                                perpage: 10
-                            },
-                            success: function (res) {
-                                const htmlStr = template('list3', res.data);
-                                $('tbody').html(htmlStr);
-                            }
-                        })
-                    }
-                });
-
-            }
+            success: callback
         })
     }
+
+
+    const allList = function (res) {
+        // console.log(res);
+        const htmlStr = template('list3', res.data);
+        // console.log(htmlStr);
+        $('tbody').html(htmlStr);
+        // 引入分页导航栏
+        $('#pagination-demo').twbsPagination({
+            totalPages: res.data.totalPage,
+            visiblePages: 7,
+            first: '首页',
+            prev: '上一页',
+            next: '下一页',
+            last: '尾页',
+            onPageClick: function (event, page) {
+                var paging = function (res) {
+                    const htmlStr = template('list3', res.data);
+                    $('tbody').html(htmlStr);
+                }
+                list(paging, page);
+            }
+        });
+
+    }
+
+
+    list(allList);
+
+
 
     // 删除功能
     $('tbody').on('click', '.delete', function () {
@@ -81,20 +84,12 @@ $(function () {
     // 筛选功能
     $('#btnSearch').on('click', function (e) {
         e.preventDefault();
-        $.get({
-            url: BigNew.article_query,
-            data: {
-                type: $('#selCategory').val(),
-                state: $('#selStatus').val(),
-                page: 1,
-                perpage: 10
-            },
-            success: function (res) {
-                $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
-                const htmlStr = template('list3', res.data);
-                $('tbody').html(htmlStr);
-            }
-        })
+        const flter = function (res) {
+            $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
+            const htmlStr = template('list3', res.data);
+            $('tbody').html(htmlStr);
+        }
+        list(flter);
     })
 
 })
