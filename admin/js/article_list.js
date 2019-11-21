@@ -23,7 +23,7 @@ $(function () {
                 perpage: 10
             },
             success: function (res) {
-                // console.log(res);
+                console.log(res);
                 const htmlStr = template('list3', res.data);
                 // console.log(htmlStr);
                 $('tbody').html(htmlStr);
@@ -79,9 +79,21 @@ $(function () {
     })
 
     // 筛选功能
-    $('#btnSearch').on('click', function () {
-        console.log($('.form-inline').serialize());
-        console.log($('.form-inline').serializeArray());
+    $('#btnSearch').on('click', function (e) {
+        e.preventDefault();
+        $.get({
+            url: BigNew.article_query,
+            data: {
+                type: $('#selCategory').val(),
+                state: $('#selStatus').val(),
+                page: 1,
+                perpage: 10
+            },
+            success: function (res) {
+                const htmlStr = template('list3', res.data);
+                $('tbody').html(htmlStr);
+            }
+        })
     })
 
 })

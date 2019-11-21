@@ -82,7 +82,7 @@
     <script type="text/html" id="list1">
         <option value="">所有分类</option>
         {{each data}}
-            <option>{{$value.name}}</option>
+            <option value="{{$value.id}}">{{$value.name}}</option>
         {{/each}}
     </script>
 
@@ -92,7 +92,7 @@
         <tr>
            <td>{{$value.title}}</td>
            <td>{{$value.author}}</td>
-           <td>奇趣事</td>
+           <td>{{$value.category}}</td>
            <td class="text-center">{{$value.date}}</td>
            <td class="text-center">{{$value.state}}</td>
            <td class="text-center">
