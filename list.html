@@ -62,7 +62,7 @@
             <div class="list_title">
                 <h3>科 技</h3>
             </div>
-
+            <!-- 
             <div class="common_news_list">
                 <a href="#" class="list_pic"><img src="images/pic09.jpg" alt=""></a>
                 <h4><a href="#">亚马逊金融试水中国？背后却是和华尔街的“金融战争” </a></h4>
@@ -133,7 +133,7 @@
                         )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
                     <b>发布于 2018-08-30 12:18:58</b>
                 </div>
-            </div>
+            </div> -->
 
             <div id="pagination" class="page"></div>
             <script>
@@ -153,19 +153,19 @@
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
                 <ul class="content_list hotrank_list">
-                    <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
+                    <!-- <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>4</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>5</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>6</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><span>7</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
+                    <li><span>7</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li> -->
                 </ul>
             </div>
             <div class="common_wrap">
                 <h3><i class="fa fa-commenting-o"></i> 最新评论</h3>
                 <ul class="content_list comment_list">
-                    <li>
+                    <!-- <li>
                         <span>山</span>
                         <b><em>山治</em> 9个月前(08-14)说:</b>
                         <strong>挺会玩的</strong>
@@ -194,19 +194,19 @@
                         <span>乔</span>
                         <b><em>乔峰</em> 9个月前(08-14)说:</b>
                         <strong>挺会玩的</strong>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <div class="common_wrap">
                 <h3><i class="fa fa-bullseye"></i> 焦点关注</h3>
                 <ul class="content_list guanzhu_list">
-                    <li><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
+                    <!-- <li><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
+                    <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li> -->
                 </ul>
             </div>
         </div>
@@ -281,32 +281,43 @@
     <script>
         //入口函数
         $(function () {
-            //搜索按钮点击事件
-            $('.search_btn').click(function () {
-                //获取搜索内容
-                var text = $('.search_txt').val();
+
+            // 封装搜索功能
+            function searchBtn(text) {
+                if (text == undefined) {
+                    //获取搜索内容
+                    var text = $('.search_txt').val();
+                }
                 //ajax请求
-                $.ajax({
+                $.get({
                     url: 'http://localhost:8080/api/v1/index/search',
-                    type: 'get',
-                    dataType: 'json',
                     data: {
                         page: 1,
                         perpage: 10,
                         key: text
                     },
-                    success: function (backData) {
-                        console.log(backData);
-                        $('.setfr').html(template('news', backData));
+                    success: function (res) {
+                        $('.setfr').html(template('news', res));
                     }
                 });
+            }
+
+            //搜索按钮点击事件 
+            $('.search_btn').click(function () {
+                searchBtn();
             });
+
+            // 如果地址栏存在get数据，则导向该搜索结果
+            if (location.search != '') {
+                searchBtn(location.search.slice(5));
+                $('.search_txt').val(location.search.slice(5));
+                $('.search_btn').trigger('click');
+            }
 
             //页面一加载：默认搜索全部
             $('.search_btn').trigger('click');
-
-
-
+            searchBtn();
+            $('.search_btn')[0].click();
 
 
         });

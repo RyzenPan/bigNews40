@@ -348,6 +348,11 @@
             }
         })
 
+        // 搜索按钮
+        $('.search_btn').on('click', function () {
+            location.href = './list.html?key=' + $('.search_txt').val();
+        })
+
     </script>
 </body>
 
