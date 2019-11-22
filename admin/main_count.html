@@ -59,6 +59,25 @@
         <div class="column_pannel" id="column_show"></div>
     </div>
 
+    <script src="./libs/html.js"></script>
+
+    <!-- 动态修改一些数据 -->
+    <script>
+        $.get({
+            url: 'http://localhost:8080/api/v1/admin/data/info',
+            success: function (res) {
+                console.log(res);
+                // 同步总文章数
+                $('.spannel em').text(res.totalArticle);
+                // 同步日增加数
+                $('.scolor01 em').text(res.dayArticle);
+                // 评论总数
+                $('.scolor02 em').text(res.totalComment);
+                // 日新增评论数
+                $('.scolor03 em').text(res.dayComment);
+            }
+        })
+    </script>
 
     <!-- 折线图 -->
     <script>
@@ -212,11 +231,11 @@
                 axisPointer: {            // 坐标轴指示器，坐标轴触发有效
                     type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
                 },
-                
+
             },
             legend: {
                 data: ['爱生活', '趣美味', '爱旅行', '爱电影', '爱游泳'],
-                top:30
+                top: 30
             },
             grid: {
                 left: '3%',
