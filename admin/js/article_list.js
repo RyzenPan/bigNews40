@@ -93,7 +93,7 @@ $(function () {
             // 判断分类是否为空，空的话就隐藏页码导航，并切覆盖tbody的内容给用户提示没有数据
             if (res.code !== 200 || res.data.data.length == 0) {
                 $('#pagination-demo').hide();
-                $('tbody').html('<tr><td colspan: "6" style="color: #999;font-size=20px;text-align: center;">没有数据</td></tr>');
+                $('tbody').html('<tr><td colspan= "6" style="color: #999;font-size=20px;text-align: center;">没有数据</td></tr>');
             } else {
                 $('#pagination-demo').show();
                 $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
