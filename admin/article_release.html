@@ -62,7 +62,7 @@
                             <div class="jeinpbox">
                                 <input type="text" class="jeinput" name="date" id="testico" placeholder="点击选择发布时间">
                                 <div class="icons jebtns"
-                                    onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',theme: { bgcolor: '#00A680', pnColor: '#00DDAA' }})">
+                                    onclick="jeDate('#testico',{trigger:false,zIndex: 99999,format: 'YYYY-MM-DD',theme: { bgcolor: '#00A680', pnColor: '#00DDAA' }})">
                                 </div>
                             </div>
                         </div>
@@ -119,36 +119,46 @@
                 $('.article_cover').attr('src', url)
             })
 
-
-            //发布文章
-            $('.btn-release').on('click', function (e) {
-                // console.log(editor.txt.text());
-                e.preventDefault();     // 阻止链接跳转事件
-                // 通过FromData获取整个表单的数据
-                var form = document.querySelector('#form');
-                var myData = new FormData(form);
-                // 富文本框单独获取并增加到myData中
-                myData.append('content', editor.txt.text());
-                // 发起修改请求
-                $.post({
-                    url: BigNew.article_publish,
-                    data: myData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res) {
-                        if (res.msg == '发布成功') {
-                            // 修改完成后返回列表页
-                            alert('修改成功，即将返回到文章列表');
-                            location.href = './article_list.html';
-                        } else {
+            // 提交按钮封装
+            function submit(ele, url, flag) {
+                $(ele).on('click', function (e) {
+                    // console.log(editor.txt.text());
+                    e.preventDefault();     // 阻止链接跳转事件
+                    // 通过FromData获取整个表单的数据
+                    var form = document.querySelector('#form');
+                    var myData = new FormData(form);
+                    // 富文本框单独获取并增加到myData中
+                    myData.append('content', editor.txt.text());
+                    // 判断是否为发布还是存到草稿箱
+                    if (flag == true) {
+                        myData.append('state', '已发布');
+                    }
+                    // 发起修改请求
+                    $.post({
+                        url: url,
+                        data: myData,
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            if (res.msg == '发布成功') {
+                                // 修改完成后返回列表页
+                                alert('发布成功，即将返回到文章列表');
+                                location.href = './article_list.html';
+                            } else {
+                                alert('您输入的信息不对，全部选项必须填写');
+                            }
+                        },
+                        error: function () {
                             alert('您输入的信息不对，全部选项必须填写');
                         }
-                    },
-                    error: function () {
-                        alert('您输入的信息不对，全部选项必须填写');
-                    }
+                    })
                 })
-            })
+            }
+
+            //发布文章
+            submit('.btn-release', BigNew.article_publish, true);
+            //存到草稿
+            submit('.btn-draft', BigNew.article_publish);
 
             // wang编辑器js部分
             var E = window.wangEditor
@@ -156,6 +166,12 @@
             // var editor = new E(document.getElementById('editor'))
             editor.create()
 
+            // 日期对象相关设置
+            jeDate("#testico", {
+                zIndex: 99999,
+                format: "YYYY-MM-DD",
+                isTime: true
+            });
 
         })
     </script>

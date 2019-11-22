@@ -63,7 +63,7 @@
                                 <input type="text" class="jeinput" name="date" id="testico" placeholder="点击选择发布时间"
                                     value="">
                                 <div class="icons jebtns"
-                                    onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD'})">
+                                    onclick="jeDate('#testico',{trigger:false,zIndex: 99999,format: 'YYYY-MM-DD'})">
                                 </div>
                             </div>
                         </div>
@@ -133,8 +133,15 @@
                 $('.article_cover').attr('src', url)
             })
 
+            // 日期对象相关设置
+            jeDate("#testico", {
+                zIndex: 99999,
+                format: "YYYY-MM-DD",
+                isTime: true
+            });
 
-            function btn(ele, url, flag) {
+            // 提交按钮封装
+            function submit(ele, url, flag) {
                 $(ele).on('click', function (e) {
                     // console.log(editor.txt.text());
                     e.preventDefault();     // 阻止链接跳转事件
@@ -160,7 +167,8 @@
                             if (res.msg == '修改成功') {
                                 // 修改完成后返回列表页
                                 alert('修改成功，即将返回到文章列表');
-                                location.href = './article_list.html';
+                                // location.href = './article_list.html';
+                                window.history.back();
                             } else {
                                 alert('您输入的信息不对，全部选项必须填写');
                             }
@@ -173,10 +181,10 @@
             }
 
             // 发布文章
-            btn('.btn-edit', BigNew.article_edit, true);
+            submit('.btn-edit', BigNew.article_edit, true);
 
             // 发布草稿文章
-            btn('.btn-draft', BigNew.article_edit);
+            submit('.btn-draft', BigNew.article_edit);
 
             // wang编辑器js部分
             var E = window.wangEditor
