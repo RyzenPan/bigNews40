@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/iconfont.css">
   <link rel="stylesheet" href="css/main.css">
   <script src="./libs/jquery-1.12.4.min.js"></script>
+  <script src="./libs/jquery.twbsPagination.js"></script>
   <script src="./libs/template-web.js"></script>
 </head>
 
@@ -33,6 +34,9 @@
         </thead>
         <tbody>
           <tr>
+            <td colspan="6" style="color: #333;font-size: 16px;text-align: center;">没有数据</td>
+          </tr>
+          <!-- <tr>
             <td>小周</td>
             <td>这是一条测试评论，欢迎光临</td>
             <td>《世界，你好》</td>
@@ -137,12 +141,13 @@
             <td class="text-center">
               <a href="javascript:editTr( 'rejected',11 );" class="btn btn-warning btn-xs">拒绝</a>
               <a href="javascript:editTr( 'trashed',11 );" class="btn btn-danger btn-xs">删除</a>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>
       <div class="row text-center">
-        <ul class="pagination pagination-sm">
+        <ul id="pagination-demo" class="pagination-sm"></ul>
+        <!-- <ul class="pagination pagination-sm">
           <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
           <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
           <li class="page-item active"><a href="#" class="page-link">1</a></li>
@@ -154,10 +159,119 @@
           <li class="page-item"><a href="#" class="page-link">7</a></li>
           <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
           <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
-        </ul>
+        </ul> -->
         <ul id="pagination" class="pagination-sm"></ul>
       </div>
 
+
+      <script src="./libs/html.js"></script>
+
+      <script type="text/html" id="list">
+      {{each data}}
+        <tr>
+            <td>{{$value.author}}</td>
+            <td>{{$value.content}}</td>
+            <td>{{$value.title}}</td>
+            <td>{{$value.date}}{{$value.time}}</td>
+            <td>{{$value.state}}</td>
+            <td class="text-center">
+              {{if $value.state == '待审核'}}
+              <a href="javascript:void(0);;" data-id="{{$value.id}}" class="btn btn-info btn-xs" id="btn-pass">批准</a>
+              {{else if $value.state == '已通过'}}
+              <a href="javascript:void(0);;" data-id="{{$value.id}}" class="btn btn-warning btn-xs" id="btn-reject">拒绝</a>
+              {{else if $value.state == '已拒绝'}}
+              
+              {{/if}}
+              <a href="javascript:void(0);;" data-id="{{$value.id}}" class="btn btn-danger btn-xs" id="btn-del">删除</a>
+            </td>
+          </tr>
+      {{/each}}
+      </script>
+
+
+      <script>
+        $(function () {
+
+          function comList(callback, myPage = 1) {
+            $.get({
+              url: BigNew.comment_list,
+              data: {
+                page: myPage,
+                perpage: 10
+              },
+              success: callback
+            })
+          }
+
+          var myPage;
+          const call = function (res) {
+            // console.log(res);
+            const htmlStr = template('list', res.data);
+            // console.log(htmlStr);
+            $('tbody').html(htmlStr);
+            // 引入分页导航栏
+            $('#pagination-demo').twbsPagination({
+              totalPages: res.data.totalPage,     // 从服务器中获取总页数
+              visiblePages: 7,
+              first: '首页',
+              prev: '上一页',
+              next: '下一页',
+              last: '尾页',
+              onPageClick: function (event, page) {
+                var paging = function (res) {
+                  const htmlStr = template('list', res.data);
+                  $('tbody').html(htmlStr);
+                }
+                // 当用户点击页码的时候重新请求数据并渲染到页面上
+                myPage = page;
+                comList(paging, myPage);
+              }
+            });
+          }
+
+          comList(call, 1);
+
+          // 封装好批准，拒绝，删除按钮功能
+          function btn(url, ele, con) {
+            $('tbody').on('click', ele, function (e) {
+              e.preventDefault();
+              // 先从当前的按钮获得触发的id号
+              const id = $(this).attr('data-id');
+              // 通过提示框询问用户是否执行
+              const flag = confirm(con)
+              // 如果确认要批准，就开始执行批准请求
+              if (flag) {
+                $.post({
+                  url: url,
+                  data: {
+                    id: id
+                  },
+                  success: function (res) {
+                    const delList = function (res) {
+                      const htmlStr = template('list', res.data);
+                      $('tbody').html(htmlStr);
+                      $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1);
+                    }
+                    // 提交完成之后重新渲染列表数据
+                    comList(call);
+                  }
+                })
+              }
+            })
+          }
+
+          // 批准功能
+          btn(BigNew.comment_pass, '#btn-pass', '您确定要批准该评论吗？');
+
+          // 拒绝功能
+          btn(BigNew.comment_reject, '#btn-reject', '您确定要拒绝该评论吗？');
+
+          // 删除功能
+          btn(BigNew.comment_delete, '#btn-del', '您确定要删除该评论吗？');
+
+
+        })
+      </script>
     </div>
   </div>
 </body>
