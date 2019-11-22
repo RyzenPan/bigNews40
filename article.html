@@ -213,15 +213,17 @@
     <script src="./js/jquery-1.12.4.min.js"></script>
 
     <script type="text/html" id="hotList">
-        {{if data}}
-            <li><span class="first">1</span><a href="#">{{data[0].title}}</a></li>
-            <li><span class="second">2</span><a href="#">{{data[1].title}}</a></li>
-            <li><span class="third">3</span><a href="#">{{data[2].title}}</a></li>
-            <li><span>4</span><a href="#">{{data[3].title}}</a></li>
-            <li><span>5</span><a href="#">{{data[4].title}}</a></li>
-            <li><span>6</span><a href="#">{{data[5].title}}</a></li>
-            <li><span>7</span><a href="#">{{data[6].title}}</a></li>
+        {{each data as val index}}
+        {{if index == 0}}
+            <li><span class="first">1</span><a href="./article.html?id={{val.id}}">{{val.title}}</a></li>
+        {{else if index == 1}}
+            <li><span class="second">2</span><a href="./article.html?id={{val.id}}">{{val.title}}</a></li>
+        {{else if index == 2}}
+            <li><span class="third">3</span><a href="./article.html?id={{val.id}}">{{val.title}}</a></li>
+        {{else}}
+            <li><span>{{index+1}}</span><a href="./article.html?id={{val.id}}">{{val.title}}</a></li>
         {{/if}}
+        {{/each}}
         </script>
 
     <script type="text/html" id="commentList">
@@ -267,71 +269,7 @@
 
     <!-- 引入公用热门评论焦点模块 -->
     <script src="./js/public.js"></script>
-    <script>
-        // console.log(location.search.slice(4));
-        $(function () {
-            const myId = location.search.slice(4) + '';
-            // console.log(myId, typeof myId);
-            $.get({
-                url: 'http://localhost:8080/api/v1/index/article',
-                data: {
-                    id: myId
-                },
-                success: function (res) {
-                    console.log(res);
-                    const htmlStr = template('art-content', res)
-                    console.log(htmlStr);
-                    $('#artContent').html(htmlStr);
-                    $('.prev').attr('href', './article.html?id=' + res.data.prev.id).text(res.data.prev.title);
-                    $('.next').attr('href', './article.html?id=' + res.data.next.id).text(res.data.next.title);
-                }
-            })
-
-            // 评论列表
-            function comment() {
-                $.get({
-                    url: 'http://localhost:8080/api/v1/index/get_comment',
-                    data: {
-                        articleId: myId
-                    },
-                    success: function (res) {
-                        const htmlStr = template('commentList1', res);
-                        $('.comment_list_con').html(htmlStr);
-                        $('.comment_count span').text(res.data.length)
-                    }
-                })
-
-
-            }
-            comment();
-
-            // 发表评论
-            $('.comment_sub').on('click', function (e) {
-                e.preventDefault();
-                $.post({
-                    url: 'http://localhost:8080/api/v1/index/post_comment',
-                    data: {
-                        author: $('.comment_name').val(),
-                        content: $('.comment_input').val(),
-                        articleId: myId
-                    },
-                    success: function (res) {
-                        console.log(res);
-                        if (res.code == 201) {
-                            alert('留言成功，等待后台审核后展示到页面中');
-                        }
-                    }
-                })
-            })
-
-            // 搜索按钮
-            $('.search_btn').on('click', function () {
-                location.href = './list.html?key=' + $('.search_txt').val();
-            })
-
-
-        })
-    </script>
+    <script src="./js/article.js"></script>
 </body>
 
 </html>

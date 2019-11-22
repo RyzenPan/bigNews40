@@ -228,20 +228,22 @@
     <!-- 引入jq文件 -->
     <script src="./js/jquery-1.12.4.min.js"></script>
 
+    <!-- 一周热门排行 -->
     <script type="text/html" id="hotList">
         {{each data as val index}}
         {{if index == 0}}
-            <li><span class="first">1</span><a href="#">{{val.title}}</a></li>
+            <li><span class="first">1</span><a href="./article.html?id={{val.id}}">{{val.title}}</a></li>
         {{else if index == 1}}
-            <li><span class="second">2</span><a href="#">{{val.title}}</a></li>
+            <li><span class="second">2</span><a href="./article.html?id={{val.id}}">{{val.title}}</a></li>
         {{else if index == 2}}
-            <li><span class="third">3</span><a href="#">{{val.title}}</a></li>
+            <li><span class="third">3</span><a href="./article.html?id={{val.id}}">{{val.title}}</a></li>
         {{else}}
-            <li><span>{{index+1}}</span><a href="#">{{val.title}}</a></li>
+            <li><span>{{index+1}}</span><a href="./article.html?id={{val.id}}">{{val.title}}</a></li>
         {{/if}}
         {{/each}}
         </script>
 
+    <!-- 最新资讯 -->
     <script type="text/html" id="newList">
             {{each data}}
             <div class="common_news_list">
@@ -259,7 +261,7 @@
             {{/each}}
             </script>
 
-
+    <!-- 最新评论 -->
     <script type="text/html" id="commentList">
         {{each data}}
             <li>
@@ -270,12 +272,14 @@
         {{/each}}
     </script>
 
+    <!-- 焦点关注 -->
     <script type="text/html" id="attention">
         {{each data}}
             <li><a href="#">{{ $value.intro }}</a></li>
         {{/each}}
     </script>
 
+    <!-- 焦点图片 -->
     <script type="text/html" id="hotpic">
         {{each data as val index}}
         {{if index == 0}}
@@ -288,72 +292,7 @@
             </li>
         {{/each}}
     </script>
-    <script>
-        // 文字热门排行模块
-        $.ajax({
-            type: 'get',
-            url: 'http://localhost:8080/api/v1/index/rank',
-            success: function (res) {
-                // console.log(res);
-                const htmlStr = template('hotList', res)
-                // console.log(htmlStr);
-                $(".hotrank_list").html(htmlStr);
-            }
-        })
-
-        // 最新资讯
-        $.ajax({
-            type: 'get',
-            url: 'http://localhost:8080/api/v1/index/latest',
-            success: function (res) {
-                // console.log(res);
-                const htmlStr = template('newList', res);
-                // console.log(htmlStr);
-                $(".common_news").html(htmlStr);
-            }
-        })
-        // 最新评论
-        $.ajax({
-            type: 'get',
-            url: 'http://localhost:8080/api/v1/index/latest_comment',
-            success: function (res) {
-                // console.log(res);
-                const htmlStr = template('commentList', res);
-                // console.log(htmlStr);
-                $(".comment_list").html(htmlStr);
-            }
-        })
-
-        // 焦点关注 
-        $.ajax({
-            type: 'get',
-            url: 'http://localhost:8080/api/v1/index/attention',
-            success: function (res) {
-                // console.log(res);
-                const htmlStr = template('attention', res);
-                // console.log(htmlStr);
-                $(".guanzhu_list").html(htmlStr);
-            }
-        })
-
-        // 焦点图片
-        $.ajax({
-            type: 'get',
-            url: 'http://localhost:8080/api/v1/index/hotpic',
-            success: function (res) {
-                // console.log(res);
-                const htmlStr = template('hotpic', res);
-                // console.log(htmlStr);
-                $(".focus_list").html(htmlStr);
-            }
-        })
-
-        // 搜索按钮
-        $('.search_btn').on('click', function () {
-            location.href = './list.html?key=' + $('.search_txt').val();
-        })
-
-    </script>
+    <script src="./js/index.js"></script>
 </body>
 
 </html>
