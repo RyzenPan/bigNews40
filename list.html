@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.pagination.min.js"></script>
+    <script src="./libs/jquery.twbsPagination.js"></script>
 </head>
 
 <body>
@@ -134,6 +135,8 @@
                     <b>发布于 2018-08-30 12:18:58</b>
                 </div>
             </div> -->
+
+            <ul id="pagination-demo" class="pagination-sm"></ul>
 
             <div id="pagination" class="page"></div>
             <script>
@@ -298,6 +301,26 @@
                     },
                     success: function (res) {
                         $('.setfr').html(template('news', res));
+                        console.log(res);
+
+
+                        // 引入分页导航栏
+                        $('#pagination-demo').twbsPagination({
+                            totalPages: res.data.totalCount / 10,     // 从服务器中获取总页数
+                            visiblePages: 7,
+                            first: '首页',
+                            prev: '上一页',
+                            next: '下一页',
+                            last: '尾页',
+                            onPageClick: function (event, page) {
+                                // 当用户点击页码的时候重新请求数据并渲染到页面上
+                                // myPage = page;
+                                console.log(page);
+                            }
+                        });
+
+
+
                     }
                 });
             }
@@ -309,8 +332,9 @@
 
             // 如果地址栏存在get数据，则导向该搜索结果
             if (location.search != '') {
-                searchBtn(location.search.slice(5));
-                $('.search_txt').val(location.search.slice(5));
+                var title = decodeURI(location.search.slice(5)); //只需要转一次码 
+                searchBtn(title);
+                $('.search_txt').val(title);
                 $('.search_btn').trigger('click');
             }
 
