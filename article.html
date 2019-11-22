@@ -94,11 +94,11 @@
             </form>
 
             <div class="comment_count">
-                4条评论
+                <span></span>条评论
             </div>
 
             <div class="comment_list_con">
-                <div class="comment_detail_list">
+                <!-- <div class="comment_detail_list">
                     <div class="person_pic fl">乔</div>
                     <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
                     <div class="comment_text fl">
@@ -125,26 +125,26 @@
                     <div class="comment_text fl">
                         遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="right_con setfl">
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
                 <ul class="content_list hotrank_list">
-                    <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
+                    <!-- <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>4</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>5</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>6</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><span>7</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
+                    <li><span>7</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li> -->
                 </ul>
             </div>
             <div class="common_wrap">
                 <h3><i class="fa fa-commenting-o"></i> 最新评论</h3>
                 <ul class="content_list comment_list">
-                    <li>
+                    <!-- <li>
                         <span>山</span>
                         <b><em>山治</em> 9个月前(08-14)说:</b>
                         <strong>挺会玩的</strong>
@@ -173,19 +173,19 @@
                         <span>乔</span>
                         <b><em>乔峰</em> 9个月前(08-14)说:</b>
                         <strong>挺会玩的</strong>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <div class="common_wrap">
                 <h3><i class="fa fa-bullseye"></i> 焦点关注</h3>
                 <ul class="content_list guanzhu_list">
-                    <li><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
+                    <!-- <li><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
+                    <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li> -->
                 </ul>
             </div>
         </div>
@@ -234,24 +234,55 @@
     <script type="text/html" id="attention">
             {{each data}}
                 <li><a href="#">{{ $value.intro }}</a></li>
-            {{/each}}
+            {{/each}} 
         </script>
 
+    <script type="text/html" id="commentList1">
+            {{each data}}
+                    <div class="comment_detail_list">
+                        <div class="person_pic fl">{{ $value.author.slice(0,1) }}</div>
+                        <div class="name_time fl"><b>{{$value.author}}</b><span>{{$value.date}} {{$value.time}}</span></div>
+                        <div class="comment_text fl">
+                            {{$value.content}}
+                        </div>
+                    </div>
+            {{/each}} 
+        </script>
     <!-- 引入公用热门评论焦点模块 -->
     <script src="./js/public.js"></script>
     <script>
         // console.log(location.search.slice(4));
-        const id = location.search.slice(4);
-        console.log(id);
-        $.ajax({
-            type: 'get',
-            url: 'http://localhost:8080/api/v1/index/artitle',
-            data: {
-                id: id
-            },
-            success: function (res) {
-                console.log(res);
-            }
+        $(function () {
+            const myId = location.search.slice(4) + '';
+            console.log(myId, typeof myId);
+            // $.get({
+            //     url: 'http://localhost:8080/api/v1/index/artitle',
+            //     data: {
+            //         id: myId
+            //     },
+            //     success: function (res) {
+            //         console.log(res);
+            //     }
+            // })
+
+            // 评论列表
+            $.get({
+                url: 'http://localhost:8080/api/v1/index/get_comment',
+                data: {
+                    articleId: myId
+                },
+                success: function (res) {
+                    const htmlStr = template('commentList1', res);
+                    $('.comment_list_con').html(htmlStr);
+                    $('.comment_count span').text(res.data.length)
+                }
+            })
+
+            // 发表评论
+
+
+
+
         })
     </script>
 </body>

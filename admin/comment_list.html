@@ -168,11 +168,15 @@
 
       <script type="text/html" id="list">
       {{each data}}
-        <tr>
+      {{if $value.state == '待审核'}}
+      <tr class="danger">
+      {{else}}
+      <tr>
+      {{/if}}
             <td>{{$value.author}}</td>
             <td>{{$value.content}}</td>
-            <td>{{$value.title}}</td>
-            <td>{{$value.date}}{{$value.time}}</td>
+            <td>《{{$value.title}}》</td>
+            <td>{{$value.date}} {{$value.time}}</td>
             <td>{{$value.state}}</td>
             <td class="text-center">
               {{if $value.state == '待审核'}}

@@ -152,7 +152,7 @@
         <div class="right_con setfl">
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
-                <ul class="content_list">
+                <ul class="content_list hotrank_list">
                     <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
@@ -228,6 +228,38 @@
 
     <!-- 导包template -->
     <script src="./js/template-web.js"></script>
+
+    <script type="text/html" id="hotList">
+            {{if data}}
+                <li><span class="first">1</span><a href="#">{{data[0].title}}</a></li>
+                <li><span class="second">2</span><a href="#">{{data[1].title}}</a></li>
+                <li><span class="third">3</span><a href="#">{{data[2].title}}</a></li>
+                <li><span>4</span><a href="#">{{data[3].title}}</a></li>
+                <li><span>5</span><a href="#">{{data[4].title}}</a></li>
+                <li><span>6</span><a href="#">{{data[5].title}}</a></li>
+                <li><span>7</span><a href="#">{{data[6].title}}</a></li>
+            {{/if}}
+            </script>
+
+    <script type="text/html" id="commentList">
+                {{each data}}
+                    <li>
+                      <span>{{ $value.author.slice(0,1) }}</span>
+                      <b><em>{{ $value.author }}</em> {{ $value.date }} 发表:</b>
+                      <strong>{{ $value.intro }}</strong>
+                    </li>
+                {{/each}}
+            </script>
+
+    <script type="text/html" id="attention">
+                {{each data}}
+                    <li><a href="#">{{ $value.intro }}</a></li>
+                {{/each}} 
+            </script>
+
+    <!-- 引入公用热门评论焦点模块 -->
+    <script src="./js/public.js"></script>
+
     <!-- 新闻列表模板 -->
     <script id="news" type="text/html">
         {{ each data.data v }}
@@ -270,6 +302,11 @@
 
             //页面一加载：默认搜索全部
             $('.search_btn').trigger('click');
+
+
+
+
+
         });
     </script>
 </body>
