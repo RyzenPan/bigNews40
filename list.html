@@ -230,16 +230,18 @@
     <script src="./js/template-web.js"></script>
 
     <script type="text/html" id="hotList">
-            {{if data}}
-                <li><span class="first">1</span><a href="#">{{data[0].title}}</a></li>
-                <li><span class="second">2</span><a href="#">{{data[1].title}}</a></li>
-                <li><span class="third">3</span><a href="#">{{data[2].title}}</a></li>
-                <li><span>4</span><a href="#">{{data[3].title}}</a></li>
-                <li><span>5</span><a href="#">{{data[4].title}}</a></li>
-                <li><span>6</span><a href="#">{{data[5].title}}</a></li>
-                <li><span>7</span><a href="#">{{data[6].title}}</a></li>
-            {{/if}}
-            </script>
+                {{each data as val index}}
+                {{if index == 0}}
+                    <li><span class="first">1</span><a href="#">{{val.title}}</a></li>
+                {{else if index == 1}}
+                    <li><span class="second">2</span><a href="#">{{val.title}}</a></li>
+                {{else if index == 2}}
+                    <li><span class="third">3</span><a href="#">{{val.title}}</a></li>
+                {{else}}
+                    <li><span>{{index+1}}</span><a href="#">{{val.title}}</a></li>
+                {{/if}}
+                {{/each}}
+     </script>
 
     <script type="text/html" id="commentList">
                 {{each data}}
